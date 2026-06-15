@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heart disease — Heart &amp; Stroke Foundation of Canada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,700;1,900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #C8102E;
+      --red-dark: #a00d25;
+      --nav-bg: #1a1a1a;
+      --gray-dark: #2d2d2d;
+      --gray-mid: #666;
+      --gray-light: #f5f5f5;
+      --gray-border: #e0e0e0;
+      --white: #fff;
+      --font: 'Roboto', Arial, sans-serif;
+    }
+
+    body { font-family: var(--font); color: var(--gray-dark); background: var(--white); }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { cursor: pointer; font-family: var(--font); }
+
+    .container { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── SKIP ── */
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--red); color: var(--white); padding: 8px 16px; z-index: 9999; }
+    .skip-link:focus { top: 0; }
+
+    /* ════════ UTILITY BAR ════════ */
+    .utility-bar { background: var(--nav-bg); color: #ccc; font-size: 12.5px; padding: 7px 0; }
+    .utility-bar .container { display: flex; justify-content: flex-end; align-items: center; gap: 20px; }
+    .utility-bar a { color: #ccc; display: flex; align-items: center; gap: 5px; font-size: 12.5px; }
+    .utility-bar a:hover { color: var(--white); text-decoration: none; }
+    .util-donate { background: var(--red); color: var(--white) !important; padding: 5px 18px; border-radius: 3px; font-weight: 700; font-size: 13px !important; }
+    .util-donate:hover { background: var(--red-dark) !important; text-decoration: none !important; }
+
+    /* ════════ LOGO BAR ════════ */
+    .logo-bar { background: var(--white); border-bottom: 1px solid #e8e8e8; padding: 10px 0; }
+    .logo-bar .container { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .logo { display: flex; align-items: center; gap: 0; text-decoration: none; flex-shrink: 0; }
+    .logo-mark { width: 52px; height: 52px; }
+    .logo-wordmark { font-size: 1.15rem; font-weight: 900; font-style: italic; line-height: 1; color: var(--gray-dark); letter-spacing: -0.5px; }
+    .logo-wordmark .amp { color: var(--red); }
+    .logo-wordmark sup { font-size: 9px; font-style: normal; vertical-align: super; }
+    .search-bar { flex: 1; max-width: 500px; position: relative; }
+    .search-bar input { width: 100%; padding: 10px 44px 10px 16px; border: 1.5px solid var(--gray-border); border-radius: 4px; font-size: 14px; font-family: var(--font); color: var(--gray-dark); outline: none; }
+    .search-bar input:focus { border-color: var(--red); }
+    .search-bar input::placeholder { color: #aaa; }
+    .search-bar button { position: absolute; right: 0; top: 0; bottom: 0; width: 44px; background: none; border: none; color: var(--gray-mid); font-size: 17px; }
+    .search-bar button:hover { color: var(--red); }
+    .logo-bar-donate { background: var(--red); color: var(--white); padding: 10px 22px; border-radius: 4px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .logo-bar-donate:hover { background: var(--red-dark); text-decoration: none; }
+
+    /* ════════ NAV BAR ════════ */
+    .nav-bar { background: var(--nav-bg); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+    .nav-bar .container { display: flex; align-items: center; }
+    .nav-list { display: flex; list-style: none; }
+    .nav-list > li { position: relative; }
+    .nav-list > li > a { display: flex; align-items: center; gap: 5px; padding: 16px 18px; font-size: 14px; font-weight: 500; color: var(--white); white-space: nowrap; border-bottom: 3px solid transparent; transition: border-color .2s; }
+    .nav-list > li > a.active,
+    .nav-list > li:hover > a { border-bottom-color: var(--red); }
+    .nav-list > li > a .caret { font-size: 10px; opacity: .6; transition: transform .2s; }
+    .nav-list > li:hover > a .caret { transform: rotate(180deg); }
+    .dropdown { display: none; position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--white); border-top: 3px solid var(--red); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 999; }
+    .nav-list > li:hover .dropdown { display: block; }
+    .dropdown a { display: block; padding: 11px 20px; font-size: 14px; color: var(--gray-dark); border-bottom: 1px solid #f0f0f0; }
+    .dropdown a:hover { background: var(--gray-light); color: var(--red); text-decoration: none; }
+    .hamburger { display: none; background: none; border: none; padding: 12px; margin-left: auto; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--white); margin: 5px 0; }
+
+    /* ════════ ALERT BANNER ════════ */
+    .alert-banner { background: #f5c400; padding: 10px 0; }
+    .alert-banner .container { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .alert-text { font-size: 13.5px; font-weight: 700; color: #1a1a1a; display: flex; align-items: center; gap: 8px; }
+    .alert-text .badge-2x { background: var(--red); color: var(--white); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; flex-shrink: 0; }
+    .alert-actions { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .alert-donate { background: var(--red); color: var(--white); padding: 6px 18px; border-radius: 3px; font-weight: 700; font-size: 13px; }
+    .alert-donate:hover { background: var(--red-dark); text-decoration: none; }
+    .alert-close { background: none; border: none; font-size: 18px; color: #555; cursor: pointer; line-height: 1; padding: 2px 4px; }
+
+    /* ════════ BREADCRUMB ════════ */
+    .breadcrumb { padding: 14px 0; border-bottom: 1px solid var(--gray-border); }
+    .breadcrumb .container { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-mid); }
+    .breadcrumb a { color: var(--gray-mid); }
+    .breadcrumb a:hover { color: var(--red); text-decoration: none; }
+    .breadcrumb .sep { opacity: .5; }
+    .breadcrumb .current { color: var(--gray-dark); font-weight: 500; }
+
+    /* ════════ PAGE HERO ════════ */
+    .page-hero { padding: 48px 0 40px; }
+    .page-hero h1 { font-size: 2.6rem; font-weight: 900; margin-bottom: 16px; }
+    .page-hero p { font-size: 1rem; line-height: 1.75; color: var(--gray-mid); max-width: 740px; }
+
+    /* ════════ UNDERSTANDING SECTION ════════ */
+    .understanding-section { padding: 0 0 56px; }
+    .understanding-section h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 24px; }
+    .understand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .understand-card { border-radius: 6px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.09); transition: transform .2s, box-shadow .2s; }
+    .understand-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,.14); text-decoration: none; }
+    .understand-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+    .understand-label { padding: 16px 18px; font-size: 15px; font-weight: 700; color: var(--gray-dark); border-top: 3px solid var(--red); }
+
+    /* ════════ BEAT YOUR RISKS BANNER ════════ */
+    .risk-banner { background: var(--red); color: var(--white); padding: 40px 0; margin-bottom: 0; }
+    .risk-banner .container { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+    .risk-banner-text h2 { font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; }
+    .risk-banner-text p { font-size: 1rem; line-height: 1.6; max-width: 600px; }
+    .risk-banner-btn { display: inline-block; background: var(--white); color: var(--red); padding: 12px 28px; border-radius: 50px; font-weight: 700; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
+    .risk-banner-btn:hover { opacity: .9; text-decoration: none; }
+
+    /* ════════ HEART ATTACK SIGNS ════════ */
+    .signs-section { padding: 64px 0; }
+    .signs-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin-bottom: 40px; }
+    .signs-header-left h2 { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
+    .signs-header-right { max-width: 400px; font-size: 14px; line-height: 1.7; color: var(--gray-mid); }
+    .signs-header-right a { color: var(--red); font-weight: 700; }
+    .signs-header-right a:hover { text-decoration: underline; }
+    .signs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 40px; }
+    .sign-item { display: flex; align-items: flex-start; gap: 16px; }
+    .sign-icon-wrap { flex-shrink: 0; width: 72px; height: 72px; }
+    .sign-icon-wrap svg { width: 72px; height: 72px; }
+    .sign-text strong { display: block; font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .sign-text span { font-size: 13px; color: var(--gray-mid); line-height: 1.5; }
+    .signs-more { margin-top: 28px; }
+    .signs-more a { color: var(--red); font-weight: 700; font-size: 14px; }
+    .signs-more a:hover { text-decoration: underline; }
+
+    /* ════════ CONDITIONS SECTION ════════ */
+    .conditions-section { padding: 64px 0; background: var(--gray-light); }
+    .conditions-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin-bottom: 40px; }
+    .conditions-header h2 { font-size: 2rem; font-weight: 900; }
+    .conditions-header p { max-width: 400px; font-size: 14px; line-height: 1.7; color: var(--gray-mid); }
+    .conditions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 60px; }
+    .conditions-col h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-mid); border-bottom: 2px solid var(--gray-border); padding-bottom: 8px; margin-bottom: 14px; }
+    .conditions-col ul { list-style: none; margin-bottom: 12px; }
+    .conditions-col ul li { margin-bottom: 6px; }
+    .conditions-col ul li a { font-size: 14px; color: var(--red); font-weight: 500; }
+    .conditions-col ul li a:hover { text-decoration: underline; }
+    .conditions-col .see-all { font-size: 13px; font-weight: 700; color: var(--red); display: inline-flex; align-items: center; gap: 4px; }
+    .conditions-col .see-all:hover { text-decoration: underline; }
+
+    /* ════════ COMMUNITY BANNER ════════ */
+    .community-banner { background: var(--red); color: var(--white); padding: 44px 0; }
+    .community-banner .container { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+    .community-banner h2 { font-size: 1.6rem; font-weight: 900; max-width: 480px; line-height: 1.3; }
+    .community-btn { display: inline-block; background: var(--white); color: var(--red); padding: 12px 28px; border-radius: 50px; font-weight: 700; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
+    .community-btn:hover { opacity: .9; text-decoration: none; }
+
+    /* ════════ LIVING WITH HD ════════ */
+    .living-section { padding: 72px 0; }
+    .living-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .living-text h2 { font-size: 2rem; font-weight: 900; margin-bottom: 16px; }
+    .living-text p { font-size: 1rem; line-height: 1.75; color: var(--gray-mid); margin-bottom: 20px; }
+    .living-text a.more-link { color: var(--red); font-weight: 700; font-size: 14px; }
+    .living-text a.more-link:hover { text-decoration: underline; }
+    .living-quote { background: var(--gray-light); border-left: 4px solid var(--red); border-radius: 0 6px 6px 0; padding: 28px 28px 28px 24px; }
+    .living-quote-person { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .living-quote-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #b34700, #e87c2a); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .living-quote-name { font-weight: 700; font-size: 15px; }
+    .living-quote-tag { font-size: 12px; color: var(--gray-mid); margin-top: 2px; }
+    .living-quote blockquote { font-size: 1rem; font-style: italic; line-height: 1.7; color: var(--gray-dark); }
+    .living-quote blockquote::before { content: '\201C'; font-size: 2rem; color: var(--red); line-height: 0; vertical-align: -0.4em; margin-right: 2px; }
+    .living-quote blockquote::after { content: '\201D'; font-size: 2rem; color: var(--red); line-height: 0; vertical-align: -0.4em; margin-left: 2px; }
+
+    /* ════════ RISK & PREVENTION ════════ */
+    .risk-prev-section { background: var(--nav-bg); color: var(--white); padding: 64px 0; }
+    .risk-prev-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .risk-prev-photo { border-radius: 8px; background: linear-gradient(135deg, #2a4a2a, #4caf50); height: 280px; display: flex; align-items: center; justify-content: center; font-size: 5rem; overflow: hidden; }
+    .risk-prev-text h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 14px; }
+    .risk-prev-text p { font-size: .95rem; line-height: 1.7; color: #bbb; margin-bottom: 24px; }
+    .risk-prev-text ul { list-style: none; }
+    .risk-prev-text ul li { margin-bottom: 10px; }
+    .risk-prev-text ul li a { color: #eee; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .risk-prev-text ul li a::before { content: '›'; color: var(--red); font-size: 18px; font-weight: 900; }
+    .risk-prev-text ul li a:hover { color: var(--white); text-decoration: underline; }
+
+    /* ════════ GET MORE INFO ════════ */
+    .more-info-section { padding: 72px 0; }
+    .more-info-section h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 32px; }
+    .more-info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .info-card { background: var(--white); border-radius: 6px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.08); transition: transform .2s, box-shadow .2s; }
+    .info-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,.14); }
+    .info-card-img { height: 150px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+    .info-card-body { padding: 18px; }
+    .info-card-body h3 { font-size: 14.5px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+    .info-card-body p { font-size: 13px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 12px; }
+    .info-card-body a { color: var(--red); font-size: 13px; font-weight: 700; }
+    .info-card-body a:hover { text-decoration: underline; }
+
+    /* ════════ NEWSLETTER ════════ */
+    .newsletter-section { padding: 72px 0; background: var(--nav-bg); color: var(--white); }
+    .newsletter-inner { display: flex; gap: 60px; align-items: center; }
+    .newsletter-content { flex: 1; }
+    .newsletter-content h2 { font-size: 2rem; font-weight: 900; margin-bottom: 10px; }
+    .newsletter-content p { font-size: .95rem; color: #aaa; line-height: 1.65; }
+    .newsletter-form { flex: 1; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .newsletter-form input { width: 100%; padding: 12px 16px; border: 1.5px solid #444; border-radius: 4px; font-size: 14px; font-family: var(--font); background: #2a2a2a; color: var(--white); outline: none; margin-bottom: 10px; }
+    .newsletter-form input:focus { border-color: var(--red); }
+    .newsletter-form input::placeholder { color: #666; }
+    .newsletter-form button { width: 100%; padding: 13px; font-size: 15px; font-weight: 700; background: var(--red); color: var(--white); border: none; border-radius: 4px; transition: background .2s; }
+    .newsletter-form button:hover { background: var(--red-dark); }
+    .privacy-note { font-size: 12px; color: #666; margin-top: 10px; line-height: 1.5; }
+    .privacy-note a { color: #999; text-decoration: underline; }
+
+    /* ════════ FOOTER ════════ */
+    footer { background: #111; color: var(--white); padding: 56px 0 0; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 48px; border-bottom: 1px solid #333; }
+    .footer-brand-name { font-size: 1.1rem; font-weight: 900; font-style: italic; color: var(--white); margin-bottom: 14px; }
+    .footer-brand p { font-size: 13px; color: #888; line-height: 1.65; margin-bottom: 18px; }
+    .footer-contact { font-size: 13px; color: #888; line-height: 1.8; }
+    .footer-contact a { color: #888; }
+    .footer-contact a:hover { color: var(--white); }
+    .social-links { display: flex; gap: 10px; margin-top: 18px; }
+    .social-links a { width: 36px; height: 36px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #ccc; transition: .2s; }
+    .social-links a:hover { background: var(--red); color: var(--white); text-decoration: none; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--white); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 9px; }
+    .footer-col ul li a { font-size: 13px; color: #888; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--white); text-decoration: none; }
+    .footer-tagline { text-align: center; padding: 28px 0 20px; border-top: 1px solid #222; }
+    .footer-tagline p { font-size: 1.3rem; font-weight: 900; color: var(--white); }
+    .footer-tagline p span { color: var(--red); }
+    .footer-bottom { padding: 16px 0 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 12px; color: #555; max-width: 640px; line-height: 1.6; }
+    .footer-legal { display: flex; gap: 14px; flex-wrap: wrap; }
+    .footer-legal a { font-size: 12px; color: #555; }
+    .footer-legal a:hover { color: #ccc; text-decoration: none; }
+
+    /* ════════ RESPONSIVE ════════ */
+    @media (max-width: 900px) {
+      .understand-grid { grid-template-columns: 1fr 1fr; }
+      .signs-grid { grid-template-columns: 1fr 1fr; }
+      .conditions-grid { grid-template-columns: 1fr; }
+      .living-inner { grid-template-columns: 1fr; }
+      .risk-prev-inner { grid-template-columns: 1fr; }
+      .more-info-grid { grid-template-columns: repeat(2, 1fr); }
+      .newsletter-inner { flex-direction: column; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .signs-header { flex-direction: column; gap: 12px; }
+      .conditions-header { flex-direction: column; gap: 12px; }
+      .community-banner .container { flex-direction: column; }
+      .risk-banner .container { flex-direction: column; }
+    }
+    @media (max-width: 600px) {
+      .nav-list { display: none; }
+      .hamburger { display: block; }
+      nav.open .nav-list { display: flex; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--nav-bg); z-index: 2000; padding: 60px 24px 24px; overflow-y: auto; }
+      .nav-list > li > a { padding: 14px 0; border-bottom: 1px solid #333; }
+      .understand-grid, .signs-grid, .more-info-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .page-hero h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- UTILITY BAR -->
+<div class="utility-bar">
+  <div class="container">
+    <a href="/heart-disease/emergency-signs"><span>⚠</span> Emergency signs</a>
+    <a href="/how-you-can-help/learn-cpr"><span>➕</span> CPR training</a>
+    <a href="/what-we-do/for-professionals"><span>＋</span> For professionals</a>
+    <a href="https://www.coeuretavc.ca/">Français</a>
+    <a href="/donate" class="util-donate">Donate</a>
+  </div>
+</div>
+
+<!-- LOGO BAR -->
+<div class="logo-bar">
+  <div class="container">
+    <a href="/" class="logo" aria-label="Heart &amp; Stroke — Home">
+      <svg class="logo-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M32 54 C32 54 6 38 6 22 C6 13.6 12.6 7 21 7 C25.6 7 29.7 9.1 32 12.5 C34.3 9.1 38.4 7 43 7 C51.4 7 58 13.6 58 22 C58 38 32 54 32 54Z" fill="#C8102E"/>
+        <line x1="16" y1="42" x2="48" y2="14" stroke="white" stroke-width="5" stroke-linecap="round"/>
+        <polyline points="20,30 25,30 28,22 31,36 34,26 37,30 44,30" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="logo-wordmark">Heart<span class="amp">&amp;</span>Stroke<sup>TM</sup></div>
+    </a>
+    <div class="search-bar">
+      <input type="search" placeholder="Search" aria-label="Search" />
+      <button type="submit" aria-label="Search">🔍</button>
+    </div>
+    <a href="/donate" class="logo-bar-donate">❤ Donate</a>
+  </div>
+</div>
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+  <div class="container">
+    <nav id="main-nav" aria-label="Main navigation">
+      <ul class="nav-list">
+        <li>
+          <a href="/heart-disease" class="active">Heart disease <span class="caret">▾</span></a>
+          <div class="dropdown">
+            <a href="/heart-disease/conditions">Conditions</a>
+            <a href="/heart-disease/symptoms">Symptoms</a>
+            <a href="/heart-disease/treatments">Treatments</a>
+            <a href="/heart-disease/emergency-signs">Emergency signs</a>
+            <a href="/heart-disease/risk-and-prevention">Risk &amp; prevention</a>
+          </div>
+        </li>
+        <li>
+          <a href="/stroke">Stroke <span class="caret">▾</span></a>
+          <div class="dropdown">
+            <a href="/stroke/what-is-a-stroke">What is a stroke?</a>
+            <a href="/stroke/types-of-stroke">Types of stroke</a>
+            <a href="/stroke/effects-of-stroke">Effects of stroke</a>
+            <a href="/stroke/recovery">Recovery</a>
+          </div>
+        </li>
+        <li>
+          <a href="/healthy-living">Healthy living <span class="caret">▾</span></a>
+          <div class="dropdown">
+            <a href="/healthy-living/healthy-eating">Healthy eating</a>
+            <a href="/healthy-living/be-active">Be active</a>
+            <a href="/healthy-living/stress-and-sleep">Stress and sleep</a>
+            <a href="/healthy-living/smoking-and-vaping">Smoking and vaping</a>
+          </div>
+        </li>
+        <li>
+          <a href="/what-we-do">What we do <span class="caret">▾</span></a>
+          <div class="dropdown">
+            <a href="/what-we-do/our-research">Our research</a>
+            <a href="/what-we-do/strategy">Our strategy</a>
+            <a href="/what-we-do/leadership">Leadership</a>
+            <a href="/what-we-do/media-centre">Media centre</a>
+          </div>
+        </li>
+        <li>
+          <a href="/how-you-can-help">How you can help <span class="caret">▾</span></a>
+          <div class="dropdown">
+            <a href="/how-you-can-help/ways-to-give">Ways to give</a>
+            <a href="/how-you-can-help/learn-cpr">Learn CPR</a>
+            <a href="/how-you-can-help/volunteer">Volunteer</a>
+            <a href="/how-you-can-help/events">Events</a>
+          </div>
+        </li>
+        <li>
+          <a href="/women">Women <span class="caret">▾</span></a>
+          <div class="dropdown">
+            <a href="/women/heart-disease-in-women">Heart disease in women</a>
+            <a href="/women/stroke-in-women">Stroke in women</a>
+            <a href="/women/pregnancy-and-heart-health">Pregnancy &amp; heart health</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner" id="alert-banner">
+  <div class="container">
+    <div class="alert-text">
+      <div class="badge-2x">2x</div>
+      Donations DOUBLED* for a limited time!
+    </div>
+    <div class="alert-actions">
+      <a href="/donate" class="alert-donate">Donate now</a>
+      <button class="alert-close" onclick="document.getElementById('alert-banner').style.display='none'" aria-label="Close">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main id="main-content">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Home</a>
+      <span class="sep">›</span>
+      <span class="current">Heart disease</span>
+    </div>
+  </div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Heart disease</h1>
+      <p>Heart disease is a general term that means the heart is not working properly. Sometimes heart disease is present at birth (congenital heart disease), other times, it develops with age. Many forms of heart disease can be prevented by living an active, healthy lifestyle.</p>
+    </div>
+  </section>
+
+  <!-- UNDERSTANDING HEART DISEASE -->
+  <section class="understanding-section">
+    <div class="container">
+      <h2>Understanding heart disease</h2>
+      <div class="understand-grid">
+        <a href="/heart-disease/how-a-healthy-heart-works" class="understand-card">
+          <div class="understand-img" style="background:linear-gradient(135deg,#ffeaea,#ffb3b3)">❤️</div>
+          <div class="understand-label">How a healthy heart works</div>
+        </a>
+        <a href="/heart-disease/conditions" class="understand-card">
+          <div class="understand-img" style="background:linear-gradient(135deg,#fff0e0,#ffcc99)">🫀</div>
+          <div class="understand-label">Types of heart disease</div>
+        </a>
+        <a href="/women/heart-disease-in-women" class="understand-card">
+          <div class="understand-img" style="background:linear-gradient(135deg,#f5e6ff,#d9a8ff)">👩</div>
+          <div class="understand-label">Heart disease in women</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEAT YOUR RISKS BANNER -->
+  <div class="risk-banner">
+    <div class="container">
+      <div class="risk-banner-text">
+        <h2>Beat your risks</h2>
+        <p>Our free Risk Screen tool helps you understand your unique risks for heart disease and stroke so you can manage them.</p>
+      </div>
+      <a href="/heart-disease/risk-and-prevention/risk-screen" class="risk-banner-btn">Get started</a>
+    </div>
+  </div>
+
+  <!-- SIGNS OF A HEART ATTACK -->
+  <section class="signs-section">
+    <div class="container">
+      <div class="signs-header">
+        <div class="signs-header-left">
+          <h2>Signs of a heart attack</h2>
+        </div>
+        <div class="signs-header-right">
+          <p>Signs can vary and may be different for men and women. If you experience any of these signs, call 9-1-1 or your local emergency number immediately.</p>
+          <br/>
+          <a href="/heart-disease/emergency-signs">More emergency signs →</a>
+        </div>
+      </div>
+
+      <div class="signs-grid">
+
+        <!-- Upper body discomfort -->
+        <div class="sign-item">
+          <div class="sign-icon-wrap">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="36" cy="14" r="10" fill="#C8102E"/>
+              <rect x="28" y="26" width="16" height="28" rx="4" fill="#C8102E"/>
+              <rect x="16" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="44" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="26" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <rect x="38" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <!-- discomfort lines on neck/shoulders -->
+              <line x1="32" y1="22" x2="28" y2="18" stroke="#ff6b6b" stroke-width="2"/>
+              <line x1="36" y1="22" x2="36" y2="17" stroke="#ff6b6b" stroke-width="2"/>
+              <line x1="40" y1="22" x2="44" y2="18" stroke="#ff6b6b" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="sign-text">
+            <strong>Upper body discomfort</strong>
+            <span>Neck, jaw, shoulder, arms, back</span>
+          </div>
+        </div>
+
+        <!-- Light-headedness -->
+        <div class="sign-item">
+          <div class="sign-icon-wrap">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="36" cy="14" r="10" fill="#C8102E"/>
+              <rect x="28" y="26" width="16" height="28" rx="4" fill="#C8102E"/>
+              <rect x="16" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="44" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="26" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <rect x="38" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <!-- stars around head -->
+              <text x="22" y="10" font-size="8" fill="#C8102E">✦</text>
+              <text x="44" y="8" font-size="8" fill="#C8102E">✦</text>
+              <text x="34" y="4" font-size="6" fill="#C8102E">✦</text>
+            </svg>
+          </div>
+          <div class="sign-text">
+            <strong>Light-headedness</strong>
+          </div>
+        </div>
+
+        <!-- Chest discomfort -->
+        <div class="sign-item">
+          <div class="sign-icon-wrap">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="36" cy="14" r="10" fill="#C8102E"/>
+              <rect x="28" y="26" width="16" height="28" rx="4" fill="#C8102E"/>
+              <rect x="16" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="44" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="26" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <rect x="38" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <!-- chest highlight -->
+              <circle cx="36" cy="36" r="8" fill="none" stroke="#ff6b6b" stroke-width="2.5"/>
+              <circle cx="36" cy="36" r="4" fill="#ff6b6b" opacity=".6"/>
+            </svg>
+          </div>
+          <div class="sign-text">
+            <strong>Chest discomfort</strong>
+            <span>Pressure, squeezing, fullness or pain, burning or heaviness</span>
+          </div>
+        </div>
+
+        <!-- Sweating -->
+        <div class="sign-item">
+          <div class="sign-icon-wrap">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="36" cy="14" r="10" fill="#C8102E"/>
+              <rect x="28" y="26" width="16" height="28" rx="4" fill="#C8102E"/>
+              <rect x="16" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="44" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="26" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <rect x="38" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <!-- sweat drops -->
+              <ellipse cx="20" cy="40" rx="3" ry="4" fill="#6bb5ff" opacity=".7"/>
+              <ellipse cx="52" cy="38" rx="3" ry="4" fill="#6bb5ff" opacity=".7"/>
+              <ellipse cx="14" cy="32" rx="2" ry="3" fill="#6bb5ff" opacity=".5"/>
+            </svg>
+          </div>
+          <div class="sign-text">
+            <strong>Sweating</strong>
+          </div>
+        </div>
+
+        <!-- Shortness of breath -->
+        <div class="sign-item">
+          <div class="sign-icon-wrap">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="36" cy="14" r="10" fill="#C8102E"/>
+              <rect x="28" y="26" width="16" height="28" rx="4" fill="#C8102E"/>
+              <rect x="16" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="44" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="26" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <rect x="38" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <!-- breath lines -->
+              <path d="M28 34 Q24 30 28 26" stroke="#ff6b6b" stroke-width="2" fill="none"/>
+              <path d="M44 34 Q48 30 44 26" stroke="#ff6b6b" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <div class="sign-text">
+            <strong>Shortness of breath</strong>
+          </div>
+        </div>
+
+        <!-- Nausea -->
+        <div class="sign-item">
+          <div class="sign-icon-wrap">
+            <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="36" cy="14" r="10" fill="#C8102E"/>
+              <rect x="28" y="26" width="16" height="28" rx="4" fill="#C8102E"/>
+              <rect x="16" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="44" y="28" width="12" height="8" rx="4" fill="#C8102E"/>
+              <rect x="26" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <rect x="38" y="54" width="8" height="16" rx="4" fill="#C8102E"/>
+              <!-- wavy lines for nausea near mouth -->
+              <path d="M30 21 Q33 19 36 21 Q39 23 42 21" stroke="white" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
+          <div class="sign-text">
+            <strong>Nausea</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="signs-more">
+        <a href="/heart-disease/emergency-signs">More emergency signs →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONDITIONS, TESTS & TREATMENTS -->
+  <section class="conditions-section">
+    <div class="container">
+      <div class="conditions-header">
+        <h2>Conditions, tests &amp;<br>treatments</h2>
+        <p>There are many types of heart disease. Here you'll learn more about your condition and available treatments. Consider consulting with your healthcare professional about your unique needs.</p>
+      </div>
+      <div class="conditions-grid">
+        <div class="conditions-col">
+          <h3>Conditions ›</h3>
+          <ul>
+            <li><a href="/heart-disease/conditions/angina">Angina</a></li>
+            <li><a href="/heart-disease/conditions/congenital-heart-disease">Congenital heart disease</a></li>
+            <li><a href="/heart-disease/conditions/heart-failure">Heart failure</a></li>
+          </ul>
+          <a href="/heart-disease/conditions" class="see-all">All conditions ›</a>
+        </div>
+        <div class="conditions-col">
+          <h3>Tests ›</h3>
+          <ul>
+            <li><a href="/heart-disease/tests/angiography">Angiography / arteriography</a></li>
+            <li><a href="/heart-disease/tests/echocardiogram">Echocardiogram</a></li>
+            <li><a href="/heart-disease/tests/electrocardiogram">Electrocardiogram (ECG/EKG)</a></li>
+          </ul>
+          <a href="/heart-disease/tests" class="see-all">Tests A–Z ›</a>
+        </div>
+        <div class="conditions-col">
+          <h3>Medications ›</h3>
+          <ul>
+            <li><a href="/heart-disease/treatments/medications/beta-blockers">Beta-blockers</a></li>
+            <li><a href="/heart-disease/treatments/medications/nitroglycerin">Nitroglycerin</a></li>
+            <li><a href="/heart-disease/treatments/medications/ace-inhibitors">ACE inhibitors</a></li>
+          </ul>
+          <a href="/heart-disease/treatments/medications" class="see-all">Medications A–Z ›</a>
+        </div>
+        <div class="conditions-col">
+          <h3>Surgeries and other procedures ›</h3>
+          <ul>
+            <li><a href="/heart-disease/treatments/surgery-and-other-procedures/implantable-pacemaker">Implantable pacemaker</a></li>
+            <li><a href="/heart-disease/treatments/surgery-and-other-procedures/ablation">Ablation</a></li>
+            <li><a href="/heart-disease/treatments/surgery-and-other-procedures/heart-valve-surgery">Heart valve surgery</a></li>
+          </ul>
+          <a href="/heart-disease/treatments/surgery-and-other-procedures" class="see-all">Surgery &amp; procedures A–Z ›</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY BANNER -->
+  <div class="community-banner">
+    <div class="container">
+      <h2>Join the Heart and Stroke Community of Survivors</h2>
+      <a href="/how-you-can-help/community-of-survivors" class="community-btn">Let's connect!</a>
+    </div>
+  </div>
+
+  <!-- LIVING WITH HEART DISEASE -->
+  <section class="living-section">
+    <div class="container">
+      <div class="living-inner">
+        <div class="living-text">
+          <h2>Living with heart disease</h2>
+          <p>Being diagnosed with heart disease can be difficult for you and your family. Knowing what to expect will help you better deal with the challenges that lie ahead.</p>
+          <a href="/heart-disease/recovery" class="more-link">More on recovery →</a>
+        </div>
+        <div class="living-quote">
+          <div class="living-quote-person">
+            <div class="living-quote-avatar">👩</div>
+            <div>
+              <div class="living-quote-name">Christina Stuwe</div>
+              <div class="living-quote-tag">Living with heart disease</div>
+            </div>
+          </div>
+          <blockquote>After my baby's birth, I was told that I might develop diabetes or an issue with sugar when I was older. There was no mention of my heart — nothing.</blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RISK & PREVENTION -->
+  <section class="risk-prev-section">
+    <div class="container">
+      <div class="risk-prev-inner">
+        <div class="risk-prev-photo">🧘</div>
+        <div class="risk-prev-text">
+          <h2>Risk and prevention</h2>
+          <p>Nearly 8 in 10 cases of premature heart disease and stroke are preventable. Here are some ways you can protect your health:</p>
+          <ul>
+            <li><a href="/heart-disease/risk-and-prevention/lifestyle-risk-factors">Lifestyle risk factors</a></li>
+            <li><a href="/heart-disease/risk-and-prevention/condition-risk-factors">Condition risk factors</a></li>
+            <li><a href="/heart-disease/risk-and-prevention/risk-factors-you-cannot-change">Risk factors you cannot change</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET MORE INFORMATION -->
+  <section class="more-info-section">
+    <div class="container">
+      <h2>Get more information</h2>
+      <div class="more-info-grid">
+        <div class="info-card">
+          <div class="info-card-img" style="background:linear-gradient(135deg,#fff3e0,#ff9800)">🫀</div>
+          <div class="info-card-body">
+            <h3>Managing cholesterol</h3>
+            <p>Learn about this controllable risk factor here.</p>
+            <a href="/heart-disease/risk-and-prevention/condition-risk-factors/managing-cholesterol">Read more →</a>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-img" style="background:linear-gradient(135deg,#e3f2fd,#2196f3)">💊</div>
+          <div class="info-card-body">
+            <h3>High blood pressure guide</h3>
+            <p>All you need to know and tips to manage it.</p>
+            <a href="/heart-disease/risk-and-prevention/condition-risk-factors/high-blood-pressure">Read more →</a>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-img" style="background:linear-gradient(135deg,#f3e5f5,#9c27b0)">🔬</div>
+          <div class="info-card-body">
+            <h3>Immune system and heart attacks</h3>
+            <p>Dr. Bryan Heit unlocks genetic secrets to target atherosclerosis.</p>
+            <a href="/articles/immune-system-and-heart-attacks">Read more →</a>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-img" style="background:linear-gradient(135deg,#e8f5e9,#4caf50)">👴</div>
+          <div class="info-card-body">
+            <h3>Heart health and aging</h3>
+            <p>Dr. Susan Howlett targets frailty to help you live healthier, longer.</p>
+            <a href="/articles/extending-heart-health-for-aging">Read more →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-inner">
+        <div class="newsletter-content">
+          <h2>Stay informed<br>and inspired!</h2>
+          <p>Get the latest research and health tips. Sign up for our newsletter Healthline, and other updates tailored just for you. Your first newsletter should arrive in the next 7–10 days.</p>
+        </div>
+        <div class="newsletter-form">
+          <form onsubmit="handleNewsletter(event)">
+            <div class="form-row">
+              <input type="text" placeholder="Your first name" required />
+              <input type="text" placeholder="Your last name" required />
+            </div>
+            <input type="email" placeholder="Your email address" required />
+            <button type="submit">Subscribe</button>
+            <p class="privacy-note">At Heart &amp; Stroke, we are committed to protecting your privacy. Your name and email address will be handled in accordance with our <a href="/privacy-policy">Privacy Policy</a>.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Heart&amp;Stroke</div>
+        <p>We are a health charity working to prevent disease, save lives and promote recovery through research, health promotion and advocacy.</p>
+        <div class="footer-contact">
+          2300 Yonge St., Suite 1200, Box 2414<br>
+          Toronto ON M4P 1E4<br>
+          <a href="tel:18884734636">1-888-473-4636</a><br>
+          <a href="/contact-us">Contact us</a>
+        </div>
+        <div class="social-links">
+          <a href="https://www.facebook.com/heartandstrokeca" aria-label="Facebook">f</a>
+          <a href="https://www.instagram.com/heartandstrokeca" aria-label="Instagram">in</a>
+          <a href="https://twitter.com/heartandstroke" aria-label="X">𝕏</a>
+          <a href="https://www.youtube.com/heartandstroke" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>About us</h4>
+        <ul>
+          <li><a href="/what-we-do/strategy">Strategy</a></li>
+          <li><a href="/what-we-do/leadership">Leadership</a></li>
+          <li><a href="/what-we-do/finances">Financials</a></li>
+          <li><a href="/how-you-can-help/ways-to-give/corporate-partner">Corporate partnerships</a></li>
+          <li><a href="/what-we-do/careers">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For media</h4>
+        <ul>
+          <li><a href="/what-we-do/media-centre">Media centre</a></li>
+          <li><a href="/what-we-do/media-centre/news-releases">News releases</a></li>
+          <li><a href="/heart-and-stroke-position-statements">Position statements</a></li>
+          <li><a href="/communications-staff">Communications staff</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For patients</h4>
+        <ul>
+          <li><a href="/what-we-do/publications">Health publications</a></li>
+          <li><a href="/services-and-resources">Services &amp; resources</a></li>
+          <li><a href="https://www.strokebestpractices.ca/resources/patient-resources">Stroke Best Practices</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Our sites</h4>
+        <ul>
+          <li><a href="https://www.heartandstrokelottery.ca/en/home">H&amp;S Lottery</a></li>
+          <li><a href="https://www.jumpropeforheart.ca/">Jump Rope for Heart</a></li>
+          <li><a href="https://www.rideforheart.ca/">Ride for Heart</a></li>
+          <li><a href="https://www.fundraiseyourway.ca/">Fundraise Your Way</a></li>
+          <li><a href="https://hskids.ca/">HeartSmart Kids</a></li>
+          <li><a href="https://shop.heartandstroke.ca/en/cad">Shop</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-tagline">
+      <p><span>Beat</span> heart disease. <span>Beat</span> stroke. <span>Beat</span> as one.</p>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; Heart and Stroke Foundation of Canada, 2026. All rights reserved. Charitable Registration No. 106846942 RR0001. *Donations made between May 1 – June 30, 2026 will be matched by a group of generous anonymous donors until $200,000 in gifts are received.</p>
+      <div class="footer-legal">
+        <a href="/privacy-policy">Privacy policy</a>
+        <a href="/terms-of-use">Terms of use</a>
+        <a href="/copyright">Copyright</a>
+        <a href="/linking-policy">Linking policy</a>
+        <a href="/complaints-policy">Complaints policy</a>
+        <a href="/accessibility">Accessibility</a>
+        <a href="/sitemap-index">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mainNav = document.getElementById('main-nav');
+  hamburgerBtn.addEventListener('click', () => {
+    const open = mainNav.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  // Newsletter
+  function handleNewsletter(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '✓ Subscribed! Thank you.';
+    btn.style.background = '#1b5e20';
+    btn.disabled = true;
+  }
+</script>
+
+</body>
+</html>
