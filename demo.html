@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personalization Demo — Heart &amp; Stroke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Graphik:wght@300;400;600;700&family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple-deep: #1a0050;
+      --purple-mid:  #3a0f8a;
+      --purple-bright: #6b21d6;
+      --accent: #a100ff;
+      --white: #fff;
+      --signal-green: #00e676;
+      --font-body: 'Roboto', sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 50%, var(--purple-bright) 100%);
+      color: var(--white);
+      user-select: none;
+    }
+
+    /* ═══════════════════════════════════════
+       MAIN LAYOUT GRID
+    ═══════════════════════════════════════ */
+    .stage {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      grid-template-columns: 1fr;
+    }
+
+    .main-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 28px 0 0;
+      position: relative;
+    }
+
+    /* ═══════════════════════════════════════
+       LEFT PANEL
+    ═══════════════════════════════════════ */
+    .left-panel {
+      width: 220px;
+      flex-shrink: 0;
+      padding: 0 20px 0 36px;
+      z-index: 10;
+    }
+    .left-panel .intro-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 10px;
+    }
+    .left-panel h1 {
+      font-size: 1.55rem;
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 20px;
+      color: var(--white);
+    }
+    .left-panel h1 em {
+      font-style: normal;
+      color: #d4a0ff;
+    }
+    .left-panel p {
+      font-size: .82rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,.7);
+    }
+
+    /* ═══════════════════════════════════════
+       LAPTOP MOCKUP
+    ═══════════════════════════════════════ */
+    .laptop-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      max-width: 820px;
+    }
+
+    .laptop {
+      width: 100%;
+      position: relative;
+    }
+
+    /* Lid / screen bezel */
+    .laptop-lid {
+      background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+      border-radius: 14px 14px 4px 4px;
+      padding: 14px 14px 10px;
+      box-shadow:
+        0 0 0 1.5px #555,
+        0 20px 60px rgba(0,0,0,.7),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      position: relative;
+    }
+
+    /* Camera dot */
+    .laptop-lid::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #444;
+      box-shadow: 0 0 0 1px #333;
+    }
+
+    /* Screen area */
+    .laptop-screen {
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      /* 16:9 ish */
+      aspect-ratio: 16 / 9.2;
+    }
+
+    .laptop-screen iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      /* Scale the iframe content down — the iframe renders at 1400px and we scale it */
+      transform-origin: top left;
+    }
+
+    /* Screen glare overlay */
+    .laptop-screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Base / hinge */
+    .laptop-base {
+      background: linear-gradient(180deg, #2a2a2a, #1e1e1e);
+      height: 14px;
+      border-radius: 0 0 3px 3px;
+      box-shadow: 0 1px 0 #555;
+      position: relative;
+    }
+    .laptop-base::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px; height: 6px;
+      background: #111;
+      border-radius: 0 0 8px 8px;
+    }
+
+    /* Stand */
+    .laptop-stand {
+      width: 92%;
+      height: 12px;
+      background: linear-gradient(180deg, #c0c0c0 0%, #a0a0a0 100%);
+      border-radius: 0 0 40px 40px;
+      margin: 0 auto;
+      box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    }
+
+    /* ═══════════════════════════════════════
+       RIGHT PANEL
+    ═══════════════════════════════════════ */
+    .right-panel {
+      width: 230px;
+      flex-shrink: 0;
+      padding: 0 28px 0 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+    }
+
+    /* Circular persona photo — top right corner */
+    .persona-photo-wrap {
+      position: absolute;
+      top: -90px;
+      right: 20px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,.25);
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      flex-shrink: 0;
+    }
+    .persona-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Black & white + blur */
+      filter: grayscale(100%) blur(1.5px) brightness(.85);
+      transition: filter 1s ease;
+    }
+    .persona-photo-wrap img.revealed {
+      filter: grayscale(0%) blur(0px) brightness(1);
+    }
+    /* Fallback placeholder */
+    .persona-photo-wrap .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #333, #555);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      filter: grayscale(100%) blur(1.5px);
+      transition: filter 1s ease;
+    }
+    .persona-photo-wrap .photo-placeholder.revealed {
+      filter: grayscale(0%) blur(0px);
+    }
+
+    /* Signal vars */
+    .vars-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,.4);
+      margin-bottom: 10px;
+      margin-top: 30px;
+    }
+
+    .var-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      opacity: 0;
+      transform: translateX(16px);
+      transition: opacity .4s ease, transform .4s ease;
+      width: 100%;
+    }
+    .var-item.visible { opacity: 1; transform: translateX(0); }
+
+    .var-ecg {
+      width: 36px;
+      height: 36px;
+      background: #111;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .var-ecg svg { width: 28px; height: 16px; }
+    .var-ecg .ecg-line {
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      fill: none;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      transition: stroke-dashoffset 1s ease;
+    }
+    .var-item.visible .ecg-line { stroke-dashoffset: 0; }
+
+    .var-text { flex: 1; min-width: 0; }
+    .var-name {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 2px;
+    }
+    .var-value {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: rgba(255,255,255,.85);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .var-value .typing { border-right: 1px solid rgba(255,255,255,.6); }
+
+    /* Confirmed state after Personalize */
+    .var-item.confirmed .var-ecg { background: rgba(0,230,118,.15); }
+    .var-item.confirmed .ecg-line { stroke: var(--signal-green); }
+    .var-item.confirmed .var-name { color: var(--signal-green); }
+    .var-item.confirmed .var-value { color: var(--white); }
+    .var-item.confirmed .var-ecg::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--signal-green);
+    }
+    .var-item.confirmed .var-ecg svg { opacity: 0; }
+
+    /* ═══════════════════════════════════════
+       BOTTOM BAR
+    ═══════════════════════════════════════ */
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 36px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      background: rgba(0,0,0,.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .accenture-logo {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: .5px;
+    }
+    .accenture-logo strong { font-weight: 700; }
+    .accenture-logo .gt {
+      display: inline-block;
+      width: 18px; height: 18px;
+      background: var(--accent);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 5px;
+      line-height: 18px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .personalize-btn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .personalize-hint {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,.0);
+      transition: color .5s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .personalize-hint.visible { color: rgba(255,255,255,.55); }
+    .personalize-hint .arrow { animation: bounce-down .8s ease infinite; display: inline-block; }
+    @keyframes bounce-down {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(4px); }
+    }
+
+    .personalize-btn {
+      background: linear-gradient(180deg, #e0e0e0 0%, #b0b0b0 100%);
+      color: #333;
+      border: none;
+      padding: 16px 64px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      cursor: not-allowed;
+      opacity: .5;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.6);
+      transition: transform .15s, box-shadow .15s, background .4s, opacity .4s, color .3s;
+      position: relative;
+    }
+    .personalize-btn:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.6);
+    }
+    .personalize-btn:not(:disabled):active { transform: translateY(0); }
+    .personalize-btn.ready {
+      background: linear-gradient(180deg, #bf80ff 0%, #8b00ff 100%);
+      color: var(--white);
+      opacity: 1;
+      cursor: pointer;
+      animation: pulse-btn 2s infinite;
+    }
+    .personalize-btn.done {
+      background: linear-gradient(180deg, #69f0ae 0%, #00c853 100%);
+      color: #003d1a;
+      opacity: 1;
+      cursor: default;
+      animation: none;
+    }
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,.4), 0 0 0 0 rgba(161,0,255,.7); }
+      50%       { box-shadow: 0 4px 20px rgba(0,0,0,.4), 0 0 0 16px rgba(161,0,255,0); }
+    }
+
+    .copyright {
+      font-size: 11px;
+      color: rgba(255,255,255,.35);
+      text-align: right;
+    }
+
+    /* ═══════════════════════════════════════
+       SCANNING OVERLAY on iframe
+    ═══════════════════════════════════════ */
+    .scan-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .scan-overlay.scanning { opacity: 1; }
+    .scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(161,0,255,.6), rgba(161,0,255,.9), rgba(161,0,255,.6), transparent);
+      box-shadow: 0 0 12px rgba(161,0,255,.8);
+      animation: scan 2.5s ease-in-out;
+    }
+    @keyframes scan {
+      0%   { top: 0%; }
+      100% { top: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="main-area">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="intro-label">Demo scenario</div>
+      <h1>Meet <em>Sarah</em>, a potential donor who's father had a stroke</h1>
+      <p>As Sarah browses the site, personalisation signals are detected in real time. Click <strong>Personalize</strong> to tailor her experience.</p>
+    </div>
+
+    <!-- LAPTOP MOCKUP -->
+    <div class="laptop-wrap">
+      <div class="laptop">
+        <div class="laptop-lid">
+          <div class="laptop-screen" id="laptop-screen">
+            <div class="scan-overlay" id="scan-overlay">
+              <div class="scan-line"></div>
+            </div>
+            <iframe
+              id="site-frame"
+              src="./index.html"
+              title="Heart and Stroke website"
+              scrolling="no"
+            ></iframe>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+      </div>
+      <div class="laptop-stand"></div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- Persona photo -->
+      <div class="persona-photo-wrap" id="persona-wrap">
+        <img
+          id="persona-img"
+          src="./img/persona.png"
+          alt="Sarah"
+          onerror="this.style.display='none'; document.getElementById('persona-placeholder').style.display='flex';"
+        />
+        <div class="photo-placeholder" id="persona-placeholder" style="display:none">👤</div>
+      </div>
+
+      <div class="vars-label">Detected signals</div>
+
+      <div class="var-item" id="var1">
+        <div class="var-ecg">
+          <svg viewBox="0 0 28 16"><polyline class="ecg-line" points="0,8 5,8 7,2 9,14 11,8 13,8 16,4 19,12 21,8 28,8"/></svg>
+        </div>
+        <div class="var-text">
+          <div class="var-name">Life event</div>
+          <div class="var-value" id="val1"></div>
+        </div>
+      </div>
+
+      <div class="var-item" id="var2">
+        <div class="var-ecg">
+          <svg viewBox="0 0 28 16"><polyline class="ecg-line" points="0,8 5,8 7,2 9,14 11,8 13,8 16,4 19,12 21,8 28,8"/></svg>
+        </div>
+        <div class="var-text">
+          <div class="var-name">Health link</div>
+          <div class="var-value" id="val2"></div>
+        </div>
+      </div>
+
+      <div class="var-item" id="var3">
+        <div class="var-ecg">
+          <svg viewBox="0 0 28 16"><polyline class="ecg-line" points="0,8 5,8 7,2 9,14 11,8 13,8 16,4 19,12 21,8 28,8"/></svg>
+        </div>
+        <div class="var-text">
+          <div class="var-name">Visitor type</div>
+          <div class="var-value" id="val3"></div>
+        </div>
+      </div>
+
+      <div class="var-item" id="var4">
+        <div class="var-ecg">
+          <svg viewBox="0 0 28 16"><polyline class="ecg-line" points="0,8 5,8 7,2 9,14 11,8 13,8 16,4 19,12 21,8 28,8"/></svg>
+        </div>
+        <div class="var-text">
+          <div class="var-name">Best campaign</div>
+          <div class="var-value" id="val4"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="accenture-logo">
+      <span class="gt">&gt;</span><strong>Accenture</strong> Song
+    </div>
+    <div class="personalize-btn-wrap">
+      <div class="personalize-hint" id="personalize-hint">
+        <span class="arrow">↓</span> Click to personalise Sarah's experience <span class="arrow">↓</span>
+      </div>
+      <button class="personalize-btn" id="personalize-btn" onclick="runPersonalize()" disabled>
+        Personalize
+      </button>
+    </div>
+    <div class="copyright">Copyright &copy; 2025 Accenture. All rights reserved.</div>
+  </div>
+</div>
+
+<script>
+  // ── Scale iframe to fit the laptop screen ──────────────────
+  function scaleIframe() {
+    var screen = document.getElementById('laptop-screen');
+    var iframe = document.getElementById('site-frame');
+    var screenW = screen.offsetWidth;
+    var nativeW = 1400; // render width of the H&S site
+    var scale = screenW / nativeW;
+    iframe.style.width  = nativeW + 'px';
+    iframe.style.height = (screen.offsetHeight / scale) + 'px';
+    iframe.style.transform = 'scale(' + scale + ')';
+  }
+  scaleIframe();
+  window.addEventListener('resize', scaleIframe);
+
+  // ── Typewriter helper ──────────────────────────────────────
+  function typeText(el, text, cb) {
+    el.textContent = '';
+    var i = 0;
+    var interval = setInterval(function() {
+      el.textContent += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        if (cb) cb();
+      }
+    }, 38);
+  }
+
+  // ── Sequential var population on load ─────────────────────
+  var signals = [
+    { id: 'var1', valId: 'val1', text: 'Bereavement' },
+    { id: 'var2', valId: 'val2', text: 'Stroke — family member' },
+    { id: 'var3', valId: 'val3', text: 'Prospect donor' },
+    { id: 'var4', valId: 'val4', text: 'Give in Memory' },
+  ];
+
+  var varsReady = false;
+
+  function populateVars() {
+    var overlay = document.getElementById('scan-overlay');
+    overlay.classList.add('scanning');
+
+    signals.forEach(function(sig, i) {
+      setTimeout(function() {
+        var item = document.getElementById(sig.id);
+        item.classList.add('visible');
+        setTimeout(function() {
+          typeText(document.getElementById(sig.valId), sig.text, function() {
+            if (i === signals.length - 1) {
+              // All vars populated — enable button
+              varsReady = true;
+              overlay.classList.remove('scanning');
+              var btn = document.getElementById('personalize-btn');
+              btn.disabled = false;
+              btn.classList.add('ready');
+              document.getElementById('personalize-hint').classList.add('visible');
+            }
+          });
+        }, 300);
+      }, 1200 + i * 900);
+    });
+  }
+
+  // Start after iframe loads
+  document.getElementById('site-frame').addEventListener('load', function() {
+    setTimeout(populateVars, 800);
+  });
+
+  // ── Personalize button ─────────────────────────────────────
+  function runPersonalize() {
+    if (!varsReady) return;
+
+    var btn = document.getElementById('personalize-btn');
+    btn.disabled = true;
+
+    // Update iframe hero
+    var iframe = document.getElementById('site-frame');
+    var doc = iframe.contentDocument || iframe.contentWindow.document;
+    var hero = doc.querySelector('.hero');
+
+    if (hero) {
+      hero.style.transition = 'opacity 0.6s ease';
+      hero.style.opacity = '0';
+
+      setTimeout(function() {
+        var photo = doc.querySelector('.hero-photo');
+        if (photo) {
+          photo.style.background =
+            "linear-gradient(to right,rgba(0,0,0,.55) 0%,rgba(0,0,0,.1) 50%,rgba(0,0,0,.55) 100%)," +
+            "url('https://www.heartandstroke.ca/-/media/sites/hsf/give-in-memory/waystogive-450x253.webp" +
+            "?rev=f66b72e12105488c82da7caabed3ba21&hash=D02E2BFC9F21032748D5C2181AD58B62') center/cover no-repeat";
+        }
+        var h1 = doc.querySelector('.hero-left h1');
+        if (h1) h1.innerHTML = 'Start giving in memory today.';
+        var sub = doc.querySelector('.hero-sub');
+        if (sub) sub.innerHTML = 'It’s a powerful way to honour someone you’ve lost and make a lasting difference in their name.';
+        var cta = doc.querySelector('.hero-read-btn');
+        if (cta) cta.textContent = 'Donate in memory';
+        hero.style.opacity = '1';
+      }, 400);
+    }
+
+    // Confirm all vars with staggered green flash
+    signals.forEach(function(sig, i) {
+      setTimeout(function() {
+        document.getElementById(sig.id).classList.add('confirmed');
+      }, i * 200);
+    });
+
+    // Reveal persona photo
+    setTimeout(function() {
+      var img = document.getElementById('persona-img');
+      var ph  = document.getElementById('persona-placeholder');
+      if (img.style.display !== 'none') img.classList.add('revealed');
+      else ph.classList.add('revealed');
+    }, 600);
+
+    // Button done state
+    setTimeout(function() {
+      btn.classList.remove('ready');
+      btn.classList.add('done');
+      btn.textContent = '✓ Personalized';
+    }, signals.length * 200 + 300);
+  }
+</script>
+
+</body>
+</html>
